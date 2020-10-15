@@ -82,7 +82,7 @@ const Middle = (props: any) => {
                 <Image width="100%" height="50%" src={blogMsg ? blogMsg.firstPicture : ""} />
             </Card>
             <Card>
-                <div style={{ fontSize : "200%" }}>
+                <div style={{ fontSize : "150%",color : "green" }}>
                     <h1 align="center">
                         {blogMsg ? blogMsg.title : ""}
                     </h1>
