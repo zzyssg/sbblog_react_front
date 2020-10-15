@@ -18,6 +18,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+import {Row, Col} from 'antd';
 
 const noMatch = (
   <Result
@@ -50,14 +51,50 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
  * use Authorized check all menu item
  */
 
-const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
+const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => 
+// {
+
+//   const tem = menuList.map((item) => {
+//     const localItem = {
+//       ...item,
+//       children: item.children ? menuDataRender(item.children) : undefined,
+//     };
+//     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
+//   });
+
+//   return (
+//     <>
+//   <div>
+//     <Row >
+//       <Col offset={12} span={8}>
+//         {tem}
+//       </Col>
+//     </Row>
+//   </div>
+//   </>
+// );
+
+// }
   menuList.map((item) => {
+  
     const localItem = {
       ...item,
       children: item.children ? menuDataRender(item.children) : undefined,
     };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
+const menuRender = (props : HeaderViewProps)  => {
+  debugger
+  return  (
+    <div>
+      <Row>
+        <Col offset={12}>
+          {props}
+        </Col>
+      </Row>
+    </div>
+  )}
+;
 
 const defaultFooterDom = (
   <DefaultFooter
@@ -153,6 +190,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       }}
       footerRender={() => defaultFooterDom}
       menuDataRender={menuDataRender}
+      menuRender={menuRender}
+      
       // rightContentRender={() => <RightContent />}
       {...props}
       {...settings}

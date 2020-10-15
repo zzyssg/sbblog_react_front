@@ -54,7 +54,7 @@ const AboutMe = (props: any) => {
                         <h1 style={{ fontWeight: "bold", fontSize: "150%" }}>关于我</h1>
                     </Card>
                     <Card>
-                        长泽亚美现任男友，目前从事前端开发工作，喜欢历史和音乐。理想是<span style={{ fontSize: "200%", color: "green" }}>世界和平</span>。
+                        长泽雅美现任男友，目前从事前端开发工作，喜欢历史和音乐。理想是<span style={{ fontSize: "200%", color: "green" }}>世界和平</span>。
                         喜欢的电视剧有<span><a style={{ fontSize: "150%", color: "orange" }} target="_blank" href="https://baike.baidu.com/item/LEGAL%20HIGH/786525?fr=aladdin">《LEAGAL HIGH》</a></span>、
                                         <a style={{ fontSize: "150%", color: "orange" }} target="_blank" href="https://baike.baidu.com/item/%E5%9C%88%E5%A5%97/912799?fr=aladdin">《圈套》</a>等。
                     </Card>

@@ -20,13 +20,13 @@ const Middle = (props: any) => {
         () => {
             // 解析得到从列表页得到的blogId
             // const val = sessionStorage.getItem("blogId") || -1;
-            const id = Number.parseInt( sessionStorage.getItem("blogId") || "-1",10) ;
-            setBlogId( id );
+            const id = Number.parseInt(sessionStorage.getItem("blogId") || "-1", 10);
+            setBlogId(id);
             if (dispatch) {
                 dispatch({
                     type: "detail/fetch",
                     payload: {
-                        'blogId' : id
+                        'blogId': id
                     }
                 })
                     .then(
@@ -35,7 +35,7 @@ const Middle = (props: any) => {
                             // 取得html格式的编辑器内容
                             const htmlContent = res.result;
                             debugger
-                            document.getElementById("htmlContent").innerHTML = htmlContent.content; 
+                            document.getElementById("htmlContent").innerHTML = htmlContent.content;
                             setEditorState(BraftEditor.createEditorState(htmlContent));
                         }
                     )
@@ -82,7 +82,10 @@ const Middle = (props: any) => {
                 <Image width="100%" height="50%" src={blogMsg ? blogMsg.firstPicture : ""} />
             </Card>
             <Card>
-                {blogMsg ? blogMsg.title : ""}
+                <h1 align="center">
+                    {blogMsg ? blogMsg.title : ""}
+                </h1>
+
                 <br />
                 <div id="htmlContent">
 

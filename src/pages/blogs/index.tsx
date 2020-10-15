@@ -97,12 +97,7 @@ const Blog = (props: any) => {
 
                     </Card>
                     <Card hoverable>
-                        <p>ppppppp</p>
-                        <p>ppppppp</p>
-                        <p>ppppppp</p>
-                        <p>ppppppp</p>
-                        <p>ppppppp</p>
-
+                        <p>要是长泽雅美就好了</p>
                     </Card>
                 </Col>
             </Row>
