@@ -1,4 +1,4 @@
-import {queryBlogById} from '@/services/detail';
+import {queryBlogById,frontLogin,commitComment} from '@/services/detail';
 
 const detail = {
     namespace : 'detail',
@@ -8,11 +8,19 @@ const detail = {
 
     effects:{
         *fetch({payload} : any,{call} : any){
-            debugger
             const response = yield call(queryBlogById,payload);
             return response;
 
-        }
+        },
+        *login({payload} : any,{call} : any){
+            const response = yield call(frontLogin,payload);
+            return response;
+        },
+        *commitComment({payload} : any,{call} : any){
+            const response = yield call(commitComment,payload);
+            return response;
+        },
+
     }
 
 }

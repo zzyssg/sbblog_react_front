@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from "@ant-design/pro-layout";
-import { Card, Row, Col, message, Tag } from 'antd';
+import { Card, Row, Col, message, Tag, BackTop } from 'antd';
 import BlogList from './components/blogList';
 
 import { connect } from 'umi';
 import { Link } from 'react-router-dom';
 
 const colors = ["#f50", "#2db7f5", "#87d068", "#108ee9", "#55acee", "#cd201f", "#3b5999", "#55acee"];
+
+const backTopStyle = {
+    height: 40,
+    width: 40,
+    lineHeight: '40px',
+    borderRadius: 4,
+    backgroundColor: '#1088e9',
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
+}
 
 const getRandomColor = (index: any) => {
     // const index = Math.round(Math.random() * colors.length);
@@ -101,6 +112,11 @@ const Blog = (props: any) => {
                     </Card>
                 </Col>
             </Row>
+            <div>
+                <BackTop>
+                    <div style={backTopStyle}>顶部</div>
+                </BackTop>
+            </div>
         </PageHeaderWrapper>
 
     )
