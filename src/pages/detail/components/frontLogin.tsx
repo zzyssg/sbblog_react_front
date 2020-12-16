@@ -7,8 +7,9 @@ import {connect} from 'umi';
 const FrontLogin = (props : any) => {
     let {loginVisiable} = props;
     let {curUserId} = props;
+    let {login} = props;
     const {dispatch} = props;
-    const [userId, setUserId] = useState(1);
+    const [loginAvatar, setLoginAvatar] = useState();
 
     const onFinish = (values: any) => {
         // 提交注册/登录
@@ -28,12 +29,18 @@ const FrontLogin = (props : any) => {
                         if(res.retCode === "001"){
                             // 设置userId
                             loginVisiable = false;
+                            login = true;
                             debugger
                             const resData = res.result;
                             curUserId = resData.userId;
+                            const curAvatar = resData.avatar;
+                            setLoginAvatar(curAvatar);
                             const token = resData.token || "";
                             sessionStorage.setItem("X-Token",token);
-                            props.callback({loginVisiable,curUserId});
+                            sessionStorage.setItem("curUserId", curUserId);
+                            sessionStorage.setItem("curAvatar",curAvatar);
+                            props.callback({loginVisiable,curUserId,curAvatar,login});
+                            message.success("已登录！");
                         }else{
                             message.error("登录失败！");
                         }
