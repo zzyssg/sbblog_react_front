@@ -4,12 +4,24 @@ import { Form, Input, Button, Checkbox, Row, Col, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {connect} from 'umi';
 
+
+
 const FrontLogin = (props : any) => {
     let {loginVisiable} = props;
     let {curUserId} = props;
     let {login} = props;
     const {dispatch} = props;
     const [loginAvatar, setLoginAvatar] = useState();
+
+    const setLoginCookie = (key : any, value : any, expTime : any) => {
+        const exp = new Date();
+        // expTime——分钟
+        const newExpTime = 5;
+        exp.setTime(exp.getTime() + newExpTime * 60 *1000);
+        document.cookie = key +  "=" + escape(value) + ";expires=" + exp.toUTCString() + ";path=/";  
+    
+    }
+    
 
     const onFinish = (values: any) => {
         // 提交注册/登录
@@ -36,9 +48,13 @@ const FrontLogin = (props : any) => {
                             const curAvatar = resData.avatar;
                             setLoginAvatar(curAvatar);
                             const token = resData.token || "";
-                            sessionStorage.setItem("X-Token",token);
-                            sessionStorage.setItem("curUserId", curUserId);
-                            sessionStorage.setItem("curAvatar",curAvatar);
+                            // sessionStorage.setItem("X-Token",token);
+                            // sessionStorage.setItem("curUserId", curUserId);
+                            // sessionStorage.setItem("curAvatar",curAvatar);
+                            // 改为存于cookie
+                            setLoginCookie("X-Token",token,1);
+                            setLoginCookie("curUserId",curUserId,1);
+                            setLoginCookie("curAvatar",curAvatar,1);
                             props.callback({loginVisiable,curUserId,curAvatar,login});
                             message.success("已登录！");
                         }else{

@@ -22,9 +22,24 @@ const Middle = (props: any) => {
     const { dispatch } = props;
     let oprtCmmntId = -1;
 
-    
+
     // 富文本编辑器
     const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null));
+
+    const getLoginCookie = (name: any) => {
+        const cookieName = unescape(name) + '=';
+        const cookieStart = document.cookie.indexOf(cookieName);
+        let cookieValue = null;
+        if (cookieStart > -1) {
+            let cookieEnd = document.cookie.indexOf(';', cookieStart);
+            if (cookieEnd === -1) {
+                cookieEnd = document.cookie.length;
+            }
+            cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+        }
+        return cookieValue;
+
+    }
 
     useEffect(
         () => {
@@ -32,8 +47,11 @@ const Middle = (props: any) => {
             // 解析得到从列表页得到的blogId
             // const val = sessionStorage.getItem("blogId") || -1;
             const bId = Number.parseInt(sessionStorage.getItem("blogId") || "-1", 10);
-            const loginId = Number.parseInt(sessionStorage.getItem("curUserId") || "-1", 10);
-            const curAvatar = sessionStorage.getItem("curAvatar") || "";
+            // const loginId = Number.parseInt(sessionStorage.getItem("curUserId") || "-1", 10);
+            // const curAvatar = sessionStorage.getItem("curAvatar") || "";
+            // 改为从cookie里取出
+            const loginId = getLoginCookie("curUserId") || -1;
+            const curAvatar = getLoginCookie("curAvatar") || "";
             setBlogId(bId);
             setUserId(loginId);
 
@@ -63,8 +81,8 @@ const Middle = (props: any) => {
                             const tempEditorContent = BraftEditor.createEditorState(htmlContent.content);
                             setEditorState(tempEditorContent);
                             document.getElementById("htmlContent").innerHTML = tempEditorContent.toHTML();
-                            
-                            
+
+
                         }
                     )
 
@@ -135,8 +153,8 @@ const Middle = (props: any) => {
                                     setEditorState(tempEditorContent);
                                     document.getElementById("htmlContent").innerHTML = tempEditorContent.toHTML();
                                     debugger
-                                    if(oprtCmmntId !== -1){
-                                        document.getElementById(oprtCmmntId).style.display="none";
+                                    if (oprtCmmntId !== -1) {
+                                        document.getElementById(oprtCmmntId).style.display = "none";
                                     }
 
                                 }
@@ -155,7 +173,8 @@ const Middle = (props: any) => {
         // setComment(values);
         // 检验是否登录，若未登录，则进行登录或者注册
         // 登录与否是在浏览器中检查是否存在token；浏览器中每次请求均携带此token
-        const token = sessionStorage.getItem("X-Token");
+        // const token = sessionStorage.getItem("X-Token");
+        const token = getLoginCookie("X-Token");
         if (!token) {
             // 注册、登录获取token
             setLoginModalVisiable(true);
@@ -207,56 +226,60 @@ const Middle = (props: any) => {
     }
 
     // 控制二级评论以及子评论的回复框
-    const openTextArea = (cmmntId : any) => {
+    const openTextArea = (cmmntId: any) => {
         oprtCmmntId = cmmntId;
         const blockOrNone = document.getElementById(cmmntId).style.display;
-        if(blockOrNone === "none"){
+        if (blockOrNone === "none") {
             document.getElementById(cmmntId).style.display = "block";
-        }else{
+        } else {
             document.getElementById(cmmntId).style.display = "none";
         }
     }
 
     return (
         <div>
-            <div >
-                <Card>
-                    <Row justify="space-between">
-                        <Col span={5}>
-                            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                            {blogMsg ? blogMsg.user.nickname : ""}
-                        </Col>
-                        <Col span={5}>
-                            <CalendarOutlined />
-                            {/* new Date(item.updateTime).toLocaleDateString() || "" */}
-                            {blogMsg ? new Date(blogMsg.updateTime).toLocaleDateString() : ""}
-                        </Col>
-                        <Col span={5}>
-                            <EyeOutlined />
-                            {blogMsg ? blogMsg.views : ""}
-                        </Col>
-                    </Row>
-                </Card>
-                <Card>
-                    <Image width="100%" height="50%" src={blogMsg ? blogMsg.firstPicture : ""} />
-                </Card>
-                <Card>
-                    <div style={{ fontSize: "150%", color: "green" }}>
-                        <h1 align="center">
-                            {blogMsg ? blogMsg.title : ""}
-                        </h1>
-                    </div>
 
-                    <br />
-                    <div className={style.myContent}>
-                        <div
-                            // className="braft-output-content"
-                            id="htmlContent" >
-                            {/* {editorState.toHTML()} */}
+
+            <div>
+                <div >
+                    <Card>
+                        <Row justify="space-between">
+                            <Col span={5}>
+                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                                {blogMsg ? blogMsg.user.nickname : ""}
+                            </Col>
+                            <Col span={5}>
+                                <CalendarOutlined />
+                                {/* new Date(item.updateTime).toLocaleDateString() || "" */}
+                                {blogMsg ? new Date(blogMsg.updateTime).toLocaleDateString() : ""}
+                            </Col>
+                            <Col span={5}>
+                                <EyeOutlined />
+                                {blogMsg ? blogMsg.views : ""}
+                            </Col>
+                        </Row>
+                    </Card>
+                    <Card>
+                        <Image width="100%" height="50%" src={blogMsg ? blogMsg.firstPicture : ""} />
+                    </Card>
+                    <Card>
+                        <div style={{ fontSize: "150%", color: "green" }}>
+                            <h1 align="center">
+                                {blogMsg ? blogMsg.title : ""}
+                            </h1>
                         </div>
-                    </div>
-                </Card>
+
+                        <div className={style.myContent}>
+                            <div
+                                // className="braft-output-content"
+                                id="htmlContent" >
+                                {/* {editorState.toHTML()} */}
+                            </div>
+                        </div>
+                    </Card>
+                </div>
             </div>
+            <br />
             <div>
                 <Card>
                     {
@@ -267,81 +290,110 @@ const Middle = (props: any) => {
                                 return (
                                     // 拿到user
                                     <div>
-                                        <div>
-                                            <Avatar src={rootComment.user.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />{rootComment.user.nickname || "为注册用户"}
-                                            <span> {new Date(rootComment.createTime).toLocaleDateString()} {new Date(rootComment.createTime).toLocaleTimeString()}</span>
-                                            <br />
-                                            <span onClick={()=>{openTextArea(rootComment.commentId)}}>{rootComment.content}</span>
-                                        </div>
-                                        <div id={`${rootComment.commentId}`} style={{ display: 'none' }}>
-                                            <Form
-                                                name="replyComment"
-                                                onFinish={onFinish}
-                                                preserve={false}
-                                            >
-                                                <Form.Item name="parentCommentId" initialValue={rootComment.commentId} hidden/>
-                                                <Form.Item name="blogId" initialValue={blogId} hidden/>
-                                                <Form.Item name="userId" initialValue={userId} hidden/>
-                                                <Form.Item label={logined ? <Avatar src={avatar} /> : "评论"} name="content"
-                                                    rules={
-                                                        [{ required: true, message: "评论内容不能为空!" }]
-                                                    }
+                                        <Row>
+                                            <Col span={6}>
+                                                <Avatar src={rootComment.user.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />
+                                                <font color="orange" size="2" >{rootComment.user.nickname || "未注册用户"}</font>
+                                            </Col>
+                                            <Col span={8} offset={10} >
+                                                <span align="right"> {new Date(rootComment.createTime).toLocaleDateString()} {new Date(rootComment.createTime).toLocaleTimeString()}</span>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col offset={1}>
+                                                <span onClick={() => { openTextArea(rootComment.commentId) }}>{rootComment.content}</span>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+
+                                            <div id={`${rootComment.commentId}`} style={{ display: 'none', width: "100%" }}>
+                                                <Form
+                                                    name="replyComment"
+                                                    onFinish={onFinish}
+                                                    preserve={false}
                                                 >
-                                                    <Input.TextArea placeholder={`@${rootComment.user.nickname}`} />
-                                                </Form.Item>
-                                                <div align="right">
-                                                    <Form.Item>
-                                                        <Button type="primary" htmlType="submit">
-                                                            提交
-                                                        </Button>
+                                                    <Form.Item name="parentCommentId" initialValue={rootComment.commentId} hidden />
+                                                    <Form.Item name="blogId" initialValue={blogId} hidden />
+                                                    <Form.Item name="userId" initialValue={userId} hidden />
+                                                    <Form.Item label={logined ? <Avatar src={avatar} /> : "评论"} name="content"
+                                                        rules={
+                                                            [{ required: true, message: "评论内容不能为空!" }]
+                                                        }
+                                                    >
+                                                        <Input.TextArea placeholder={`@${rootComment.user.nickname}`} />
                                                     </Form.Item>
-                                                </div>
-                                            </Form>
-                                        </div>
-
-                                        <div>
-                                            {
-                                                subComments && subComments.map(
-                                                    (subComment: any) => {
-                                                        return (
-                                                            <div>
-                                                                <Avatar src={subComment.user.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />
-                                                                {subComment.user.nickname || "未注册用户"}<span> 回复@ <Avatar src={subComment.parentCommentUser.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />{subComment.parentCommentUser.nickname}<span> </span>
-                                                                    {new Date(subComment.createTime).toLocaleDateString()} {new Date(subComment.createTime).toLocaleTimeString()}</span>
-                                                                <br />
-                                                                <p onClick={()=>{openTextArea(subComment.commentId)}}>{subComment.content}</p>
-                                                                <div id={`${subComment.commentId}`} style={{ display: 'none' }}>
-                                                                    <Form
-                                                                        name="replyComment"
-                                                                        onFinish={onFinish}
-                                                                        preserve={false}
-                                                                    >
-                                                                        <Form.Item name="parentCommentId" initialValue={subComment.commentId} hidden/>
-                                                                        <Form.Item name="blogId" initialValue={blogId} hidden/>
-                                                                        <Form.Item name="userId" initialValue={userId} hidden/>
-                                                                        <Form.Item label={logined ? <Avatar src={avatar} /> : "评论"} name="content"
-                                                                            rules={
-                                                                                [{ required: true, message: "评论内容不能为空!" }]
-                                                                            }
-                                                                        >
-                                                                            <Input.TextArea placeholder={`@${subComment.user.nickname}`} />
-                                                                        </Form.Item>
-                                                                        <div align="right">
-                                                                            <Form.Item>
-                                                                                <Button type="primary" htmlType="submit">
-                                                                                    提交
+                                                    <div align="right">
+                                                        <Form.Item>
+                                                            <Button type="primary" htmlType="submit">
+                                                                提交
+                                                        </Button>
+                                                        </Form.Item>
+                                                    </div>
+                                                </Form>
+                                            </div>
+                                        </Row>
+                                        <Row>
+                                            <Col offset={1} span={23}>
+                                                <div >
+                                                    {
+                                                        subComments && subComments.map(
+                                                            (subComment: any) => {
+                                                                return (
+                                                                    <div>
+                                                                        <Row>
+                                                                            <Col span={4}>
+                                                                                <Avatar src={subComment.user.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />
+                                                                                <font color="orange" size="2">{subComment.user.nickname || "未注册用户"}</font>
+                                                                            </Col>
+                                                                            <Col span={6}>
+                                                                                <span> 回复@ <Avatar src={subComment.parentCommentUser.avatar || "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} /></span>
+                                                                                <font color="orange" size="2">{subComment.parentCommentUser.nickname}</font>
+                                                                            </Col>
+                                                                            <Col span={6} offset={8}>
+                                                                                {new Date(subComment.createTime).toLocaleDateString()} {new Date(subComment.createTime).toLocaleTimeString()}
+                                                                            </Col>
+                                                                        </Row>
+                                                                        <Row>
+                                                                            <Col offset={1}>
+                                                                                <p onClick={() => { openTextArea(subComment.commentId) }}>{subComment.content}</p>
+                                                                            </Col>
+                                                                        </Row>
+                                                                        <Row>
+                                                                            <div id={`${subComment.commentId}`} style={{ display: 'none', width: "100%" }}>
+                                                                                <Form
+                                                                                    name="replyComment"
+                                                                                    onFinish={onFinish}
+                                                                                    preserve={false}
+                                                                                >
+                                                                                    <Form.Item name="parentCommentId" initialValue={subComment.commentId} hidden />
+                                                                                    <Form.Item name="blogId" initialValue={blogId} hidden />
+                                                                                    <Form.Item name="userId" initialValue={userId} hidden />
+                                                                                    <Form.Item label={logined ? <Avatar src={avatar} /> : "评论"} name="content"
+                                                                                        rules={
+                                                                                            [{ required: true, message: "评论内容不能为空!" }]
+                                                                                        }
+                                                                                    >
+                                                                                        <Input.TextArea style={{ width: "100%" }} placeholder={`@${subComment.user.nickname}`} />
+                                                                                    </Form.Item>
+                                                                                    <div align="right">
+                                                                                        <Form.Item>
+                                                                                            <Button type="primary" htmlType="submit">
+                                                                                                提交
                                                                                 </Button>
-                                                                            </Form.Item>
-                                                                        </div>
-                                                                    </Form>
+                                                                                        </Form.Item>
+                                                                                    </div>
+                                                                                </Form>
 
-                                                                </div>
-                                                            </div>
+                                                                            </div>
+                                                                        </Row>
+                                                                    </div>
+                                                                )
+                                                            }
                                                         )
                                                     }
-                                                )
-                                            }
-                                        </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
                                         <hr align="center" color="green" SIZE="2" />
                                     </div>
                                 )
